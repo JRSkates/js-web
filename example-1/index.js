@@ -7,7 +7,7 @@ const add = require('./add');
 const multiply = require('./multiply');
 
 
-const result = multiply(add(2, 2), 4)
+const result = multiply(add(2, 4), 12)
 
 
 console.log(new Date());
