@@ -13,6 +13,8 @@ describe('MessageView', () => {
     const view = new MessageView();
 
     const buttonEl = document.querySelector('#show-message-button');
+    const inputEl = document.querySelector('#message-input');
+    inputEl.value = 'test input';
     buttonEl.click();
 
     expect(document.querySelector('#message')).not.toBeNull();
