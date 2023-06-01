@@ -53,11 +53,11 @@
           });
         }
         display(repoData) {
-          const repoNameEl = document.querySelector("#repo-name");
-          const repoDescriptionEl = document.querySelector("#repo-description");
+          const repoNameEl = document.getElementById("repo-name");
+          const repoDescriptionEl = document.getElementById("repo-description");
           const repoImageEl = document.querySelector("#repo-image");
-          repoNameEl.append(repoData.name);
-          repoDescriptionEl.append(repoData.description);
+          repoNameEl.innerText = repoData.name;
+          repoDescriptionEl.innerText = repoData.description;
           repoImageEl.src = repoData.organization.avatar_url;
         }
       };
