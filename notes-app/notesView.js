@@ -1,6 +1,8 @@
 class NotesView {
-  constructor(model) {
+  constructor(model, client) {
     this.model = model;
+    this.client = client;
+
     this.mainContainerEl = document.querySelector('#main-container');
     this.addNoteButtonEl = document.querySelector('#add-note-button');
     this.clearAllNotesButtonEl = document.querySelector('#clear-notes-button');
@@ -16,9 +18,10 @@ class NotesView {
 
   displayNotes() {
     const notes = this.model.getNotes();
+    console.log(notes);
     notes.forEach(element => {
       element = document.querySelector('#note-input').value;
-      const noteEl = document.createElement('div');
+      let noteEl = document.createElement('div');
       noteEl.className = 'note';
       noteEl.textContent = element;
       this.mainContainerEl.append(noteEl);
@@ -30,6 +33,18 @@ class NotesView {
     document.querySelectorAll('.note').forEach(element => {
       element.remove();
     });
+    this.displayNotesFromApi();
+  }
+
+  displayNotesFromApi() {
+    this.client.loadNotes((apiData) => {
+      this.model.setNotes(apiData);
+      let noteEl = document.createElement('div');
+      noteEl.className = 'note';
+      noteEl.textContent = this.model.getNotes();
+
+      this.mainContainerEl.append(noteEl);
+    })
   }
 
 }

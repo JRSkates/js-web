@@ -3,12 +3,20 @@
  */
 
 const fs = require("fs");
-const NotesModel = require('./notesModel')
+const NotesClient = require('./notesClient');
+const NotesModel = require('./notesModel');
 const NotesView = require('./notesView');
+require('jest-fetch-mock').enableMocks()
+
+jest.mock('./notesClient');
 
 describe('NotesView', () => {
-  it ('displays a note', () => {
+  beforeEach(() => {
     document.body.innerHTML = fs.readFileSync('./index.html');
+    NotesClient.mockClear();
+  });
+
+  it ('displays a note', () => {
 
     const model = new NotesModel
     const view = new NotesView(model)
@@ -21,7 +29,6 @@ describe('NotesView', () => {
   });
 
   it ('clears the list of previous note before displaying', () => {
-    document.body.innerHTML = fs.readFileSync('./index.html');
 
     const model = new NotesModel
     const view = new NotesView(model)
@@ -38,7 +45,6 @@ describe('NotesView', () => {
   });
 
   it ('clears the input value after adding a note', () => {
-    document.body.innerHTML = fs.readFileSync('./index.html');
 
     const model = new NotesModel
     const view = new NotesView(model)
@@ -50,7 +56,6 @@ describe('NotesView', () => {
   });
 
   it ('clears my notes with the Clear Notes button', () => {
-    document.body.innerHTML = fs.readFileSync('./index.html');
 
     const model = new NotesModel
     const view = new NotesView(model)
@@ -60,5 +65,18 @@ describe('NotesView', () => {
     view.clearNotes();
 
     expect(document.querySelectorAll('div.note').length).toEqual(0);
+  });
+
+  it('displayes the note from the API', () => {
+    const model = new NotesModel();
+    const client = new NotesClient();
+    const notes = new NotesView(model, client);
+
+    client.loadNotes.mockImplementation((callback) => {
+      callback(['note 1'])
+    });
+    
+    notes.displayNotesFromApi()
+    expect(document.querySelectorAll('div.note').length).toEqual(1)
   });
 });
