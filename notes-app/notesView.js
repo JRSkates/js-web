@@ -8,6 +8,9 @@ class NotesView {
     this.clearAllNotesButtonEl = document.querySelector('#clear-notes-button');
 
     this.addNoteButtonEl.addEventListener('click', () => {
+      const noteContent = document.querySelector('#note-input').value;
+      this.addNoteToAPI(noteContent);
+      this.addNewNote(noteContent)
       this.displayNotes();
     });
 
@@ -17,13 +20,18 @@ class NotesView {
   }
 
   displayNotes() {
+    const errorEl = document.querySelector('.error');
+    if (errorEl !== null) {
+      errorEl.remove();
+    }
+    document.querySelectorAll('.note')
+    .forEach((note) => note.remove());
+
     const notes = this.model.getNotes();
-    console.log(notes);
-    notes.forEach(element => {
-      element = document.querySelector('#note-input').value;
+    notes.forEach(note => {
       let noteEl = document.createElement('div');
       noteEl.className = 'note';
-      noteEl.textContent = element;
+      noteEl.textContent = note;
       this.mainContainerEl.append(noteEl);
     });
     document.getElementById('note-input').value = "";
@@ -39,12 +47,16 @@ class NotesView {
   displayNotesFromApi() {
     this.client.loadNotes((apiData) => {
       this.model.setNotes(apiData);
-      let noteEl = document.createElement('div');
-      noteEl.className = 'note';
-      noteEl.textContent = this.model.getNotes();
-
-      this.mainContainerEl.append(noteEl);
+      this.displayNotes();
     })
+  }
+
+  addNewNote(noteContent) {
+    this.model.addNote(noteContent);
+  }
+
+  addNoteToAPI(noteContent) {
+    this.client.createNote(noteContent);
   }
 
 }
