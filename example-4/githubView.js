@@ -24,7 +24,6 @@ class GithubView {
     repoNameEl.innerText = repoData.name;
     repoDescriptionEl.innerText = repoData.description;
     repoImageEl.src = repoData.organization.avatar_url;
-  
   }
 }
 
